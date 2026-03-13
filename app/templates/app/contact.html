@@ -1,0 +1,17 @@
+﻿{% extends "app/layout.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/contacts.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h1>Больше о нас тут:</h1>
+<ol>
+<li> <a href="https://youtube.com" target = "_blank"><i class="fab fa-youtube fa-lg">&nbsp;Youtube</i></a>
+<li> <a href="https://vk.com" target = "_blank"><i class="fab fa-vk fa-lg">&nbsp;VK</i></a>
+<li> <a href="https://telegram.org/" target = "_blank"><i class="fab fa-telegram fa-lg">&nbsp;Telegram</i></a>
+</ol>
+
+{% endblock %}

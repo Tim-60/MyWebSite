@@ -1,0 +1,43 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/links.css' %}">
+<style>
+    body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="resources">
+    <h1>Полезные ресурсы:</h1>
+
+    <ol class="resources-list">
+        <li>
+            <a href="https://ru.wikipedia.org/" target="_blank">
+                <img src="{% static 'app/content/Wikipedia-logo-ru.png' %}" alt="Wiki" class="resource-icon">
+                <span class="resource-name">Википедия</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="https://scholar.google.com/" target="_blank">
+                <img src="{% static 'app/content/google-logo.png' %}" alt="Scholar" class="resource-icon">
+                <span class="resource-name">Гугл Академия</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="https://meet.google.com/" target="_blank">
+                <img src="{% static 'app/content/meet-logo.png' %}" alt="Meet" class="resource-icon">
+                <span class="resource-name">Гугл Встречи</span>
+            </a>
+        </li>
+    </ol>
+</div>
+{% endblock %}
