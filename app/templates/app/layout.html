@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - My Django Application</title>
+    <title>{{ title }}</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'app/content/about.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/links.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/contacts.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/pool.css' %}">
     {% endblock %}
     <style>
     body {
@@ -37,6 +38,7 @@
                     <li><a href="{% url 'about' %}">О нас</a></li>
                     <li><a href="{% url 'contact' %}">Контакты</a></li>
                     <li><a href="{% url 'links' %}">Полезные ресурсы</a></li>
+                    <li><a href="{% url 'pool' %}">Обратная связь</a></li>
                 </ul>
                 {% include 'app/loginpartial.html' %}
             </div>

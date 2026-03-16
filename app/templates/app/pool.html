@@ -1,0 +1,77 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="resources"> 
+    {% if form != None %}
+    <h3>Форма обратной связи:</h3>
+        <div class="form-card">
+            <form method="post">
+                {% csrf_token %}
+               
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    {{ form.name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
+                    {{ form.country }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.internet.id_for_label }}">{{ form.internet.label }}</label>
+                    {{ form.internet }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.payment.id_for_label }}">{{ form.payment.label }}&nbsp;&nbsp;{{ form.payment }}</label>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.education.id_for_label }}">{{ form.education.label }}</label>
+                    {{ form.education }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+                    {{ form.message }}
+                </div>
+                <input class="mybutton" type="submit" value="Отправить">
+            </form>
+        </div>
+    {% else %}
+        <h3>Благодарим за ответы!</h3>
+        <div class="data-card">
+            <ul class="resources-list">
+                <li><span>Имя: </span>{{ data.name }}</li>
+                <li><span>Страна: </span>{{ data.country }}</li>
+                <li><span>На платформе: </span>{{ data.internet }}</li>
+                <li><span>Использование платных материалов: </span>{{ data.payment }}</li>
+                <li><span>Образование: </span>{{ data.education }}</li>
+                <li><span>Пожелания: </span>{{ data.message }}</li>
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+<script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        
+        $('.mybutton').mouseover(function() {
+            $(this).css('color', '#33CC33'); 
+        });
+
+        $('.mybutton').mouseout(function() {
+            $(this).css('color', 'black'); 
+        });
+
+        
+        $('#id_name, #id_country, #id_message').focus(function() {
+            $(this).css('background-color', '#33CC33'); 
+        });
+
+        $('#id_name, #id_country, #id_message').blur(function() {
+            $(this).css('background-color', 'white'); 
+        });
+    });
+</script>
+{% endblock %}
