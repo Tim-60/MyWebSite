@@ -1,0 +1,33 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/registration.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row-justify-content-center">
+        <div class="col-md-8">
+            
+            <div class="form-card resources">
+                
+                <h3 style="color: #fff; text-align: center;">Регистрация пользователя</h3>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-fields-wrapper">
+                        {{ regform.as_p }}
+                    </div>
+
+                    <button type="submit" class="mybutton">
+                        Зарегистрировать
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

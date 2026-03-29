@@ -1,0 +1,78 @@
+.row-justify-content-center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 5%;
+}
+
+.resources form p {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    border-bottom: 3px solid #fff;
+    padding-bottom: 20px;
+}
+
+.resources form p label {
+    font-weight: 700;
+    color: #6633FF;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+}
+
+#id_username, #id_password1, #id_password2 {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 3px solid #eee;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    outline: none;
+    background-color: #fff;
+}
+
+#id_username:focus, #id_password1:focus, #id_password2:focus {
+    border-color: #6633FF;
+    background-color: #33CC33;
+    box-shadow: 0 4px 15px rgba(102, 51, 255, 0.1);
+}
+
+.resources .mybutton {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: #6633FF; 
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(102, 51, 255, 0.3);
+}
+
+.resources .mybutton:hover {
+    background: #5522EE;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 51, 255, 0.4);
+}
+
+.resources h3 {
+    font-size: 5rem;
+    margin-bottom: 5%; 
+    padding-bottom: 10px;
+    border-bottom: 3px solid #fff; 
+    font-weight: 700;
+}
+
+span, ul {
+    margin-top: 15px;
+    color: #fff;
+}

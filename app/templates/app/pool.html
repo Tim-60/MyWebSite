@@ -67,10 +67,12 @@
         
         $('#id_name, #id_country, #id_message').focus(function() {
             $(this).css('background-color', '#33CC33'); 
+            $(this).css('border-color', '#6633FF'); 
         });
 
         $('#id_name, #id_country, #id_message').blur(function() {
             $(this).css('background-color', 'white'); 
+            $(this).css('border-color', '#fff'); 
         });
     });
 </script>
