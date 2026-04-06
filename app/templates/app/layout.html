@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.7.2/css/all.css">
     <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
     {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'app/content/blogpost.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/about.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/links.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/contacts.css' %}">
@@ -39,6 +40,7 @@
                     <li><a href="{% url 'contact' %}">Контакты</a></li>
                     <li><a href="{% url 'links' %}">Полезные ресурсы</a></li>
                     <li><a href="{% url 'pool' %}">Обратная связь</a></li>
+                    <li><a href="{% url 'blog' %}">Библиотека</a></li>
                 </ul>
                 {% include 'app/loginpartial.html' %}
             </div>

@@ -38,7 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_summernote',
 ]
+
+SUMMERNOTE_CONFIG = {
+    'iframe': True,          # ⚠️ Обязательно для Django 4.2+/5.x
+    'lang': 'ru-RU',
+    'width': '100%',
+    'height': '400',
+    'attachment_require_authentication': True,
+    'toolbar': [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['insert', ['link', 'picture']],
+        ['view', ['codeview']],
+    ],
+    # Разрешённые HTML-теги на уровне редактора
+    'safe_attrs': ['href', 'title', 'target', 'src', 'alt', 'class', 'style'],
+}
 
 # Middleware framework
 # https://docs.djangoproject.com/en/2.1/topics/http/middleware/
@@ -111,3 +129,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['media']))

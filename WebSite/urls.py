@@ -3,10 +3,12 @@ Definition of urls for WebSite.
 """
 
 from datetime import datetime
-from django.urls import path
+from django.urls import include, path
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from app import forms, views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -30,4 +32,10 @@ urlpatterns = [
     path('links/', views.links, name='links'),
     path('pool/', views.pool, name='pool'),
     path('registration/', views.registration, name='registration'),
+    path('blog', views.blog, name = 'blog'),
+    path('blogpost/<int:parametr>/', views.blogpost, name='blogpost'),
+     path('summernote/', include('django_summernote.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

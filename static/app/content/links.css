@@ -1,0 +1,74 @@
+.resources {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    line-height: 1.6;
+}
+
+.resources h1 {
+    font-size: 5rem;
+    margin-bottom: 3rem;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.resources .resources-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+    padding: 0;
+    margin: 0;
+}
+
+.resources .resources-list li a {
+    display: flex;
+    background: #fff;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 4rem;
+    border-radius: 30px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.resources .resource-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.resources .resource-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.resources .resources-list li a:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+}
+
+.resources .resources-list li a:hover .resource-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.resources .resources-list li a:hover .resource-name {
+    color: #33CC33;
+}
+

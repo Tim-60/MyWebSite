@@ -1,0 +1,81 @@
+.row-justify-content-center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10%;
+}
+
+.form-card {
+    width: 100%;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column; 
+    border-bottom: 3px solid #fff; 
+    padding-bottom: 10px;
+}
+
+.resources label {
+    font-weight: 700;
+    color: #6633FF;
+    margin-bottom: 1rem;
+    font-size: 2rem; 
+    letter-spacing: 0.5px;
+}
+
+#id_password, #id_username
+{
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 2px solid #fff;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    outline: none;
+    background-color: #fff;
+}
+
+
+.resources .mybutton {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: #6633FF; 
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(102, 51, 255, 0.3);
+}
+
+.resources .mybutton:hover {
+    background: #5522EE;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 51, 255, 0.4);
+}
+
+.resources h3 {
+    font-size: 5rem;
+    margin-bottom: 20%; 
+    padding-bottom: 10px;
+    border-bottom: 3px solid #fff; 
+    font-weight: 700;
+}
+
+#id_password:focus, #id_username:focus {
+    background: #33CC33;
+    border-color: #6633FF;
+    box-shadow: 0 4px 15px rgba(102, 51, 255, 0.1);
+}

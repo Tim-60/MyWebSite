@@ -1,0 +1,18 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/blogpost.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<h2>{{ post_1.title }}</h2>
+
+<div class="blog-content">
+    {{ post_1.content|safe }}
+</div>
+
+<p><a href="{% url 'blog' %}" class="btn btn-danger">Назад</a></p>
+{% endblock %}
