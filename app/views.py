@@ -5,10 +5,10 @@ Definition of views.
 from datetime import datetime
 from django.shortcuts import redirect, render
 from django.http import HttpRequest
-from .forms import MainForm 
+from .forms import MainForm, CommentForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import models
-from .models import Blog
+from .models import Blog, Comment
 
 def home(request):
     """Renders the home page."""
@@ -132,11 +132,29 @@ def blogpost (request, parametr):
 
     assert isinstance(request, HttpRequest)
     post_1 = Blog.objects.get(id=parametr)
+    comments = Comment.objects.filter(post=parametr)
+    form = CommentForm(request.POST)
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            comment_f = form.save(commit=False)
+            comment_f.author = request.user
+            comment_f.date = datetime.now()
+            comment_f.post = Blog.objects.get(id=parametr)
+            comment_f.save()
+
+            return redirect('blogpost', parametr=post_1.id)
+        
+        else:
+            form = CommentForm()
+
     return render(
         request,
         'app/blogpost.html',
         {
             'post_1': post_1,
+            'comments': comments,
+            'form': form,
             'year': datetime.now().year,
         }
     )

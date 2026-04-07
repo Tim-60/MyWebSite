@@ -5,6 +5,8 @@ Definition of forms.
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
+from django.db import models
+from .models import Comment
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -33,3 +35,9 @@ class MainForm(forms.Form):
                                 ('3', 'Высшее учебное заведение'),
                                 ('4', 'Занимаюсь саомобучением')), widget=forms.RadioSelect, initial=1)
     message = forms.CharField(label= 'Пожелания нашей платформе:', required=False, widget=forms.Textarea(attrs={'rows':5,'cols':50}))
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        labels = {'text':"Комментарий"}
