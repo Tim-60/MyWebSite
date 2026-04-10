@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'app/content/links.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/contacts.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/pool.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/blog.css' %}">
     {% endblock %}
     <style>
     body {
@@ -35,7 +36,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'home' %}" class="navbar-brand"><img src="{% static 'app/content/logo.png' %}" alt="logo" width="45" height="30" /></a></li>
+                    <li><a href="{% url 'home' %}" class="navbar-brand-img"><img src="{% static 'app/content/logo.png' %}" alt="logo" width="45" height="30" /></a></li>
                     <li><a href="{% url 'about' %}">О нас</a></li>
                     <li><a href="{% url 'contact' %}">Контакты</a></li>
                     <li><a href="{% url 'links' %}">Полезные ресурсы</a></li>
@@ -46,7 +47,7 @@
             </div>
         </div>
     </div>
-
+        
     <div class="container body-content">
 {% block content %}{% endblock %}
     </div>
