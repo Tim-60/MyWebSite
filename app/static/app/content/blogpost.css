@@ -3,3 +3,164 @@
         overflow: visible !important; 
         height: auto !important;
 }
+
+body {
+    color: #333333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 0vh;
+    padding-top: 5%;
+}
+
+h2, h3, h5 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+h5 {
+    text-decoration: underline wavy 2px;
+    text-underline-offset: 5px;
+    font-size: 12pt;
+}
+
+h2 {
+    font-size: 2em;
+    text-align: center;
+    text-decoration: underline solid 5px;
+    text-underline-offset: 10px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+}
+
+h6 {
+    color: #e0e0e0;
+    font-style: italic;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+form p {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+form p label {
+    color: #ffffff; 
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+
+form input[type="text"],
+form input[type="email"],
+form input[type="url"],
+form textarea {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 25px; 
+    padding: 15px 25px;
+    font-size: 1em;
+    color: #111111;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.save.btn {
+    background-color: #ffffff;
+    width: 100%;
+    color: #555555; /* Green text on white button */
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.8rem;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.save.btn:hover {
+    color: #f9f9f9;
+    background-color: #33CC33;
+    transform: scale(1.05);
+}
+
+a.my-btn{
+    display: block;
+    margin: auto;
+    text-align: center;
+    padding: 1rem;
+    background: #fff;
+    width: 25%;
+    color: #333;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+
+}
+
+a.my-btn:hover {
+    text-decoration: none;
+    background-color: #6633FF;
+    color: #f9f9f9;
+    transform: scale(1.05);
+
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+    margin: 30px 0;
+}
+
+.comment-box {
+    background-color: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.separator {
+    border: 0;
+    height: 10px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+    margin: 30px 0;
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user_comment {
+    border-left: 5px solid #6633FF;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.user_comment > p {
+    font-weight: 400;
+    font-size: 14pt;
+    font-family: 'Times New Roman', Times, serif
+}

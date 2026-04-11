@@ -15,8 +15,9 @@
 </div>
 
 {% if user.is_authenticated %}
-<h3>Добавить комментарий</h3>
-<form method="post">
+<hr class="separator"/>
+<h3 class="comment">Добавить комментарий</h3>
+<form class="comment" method="post">
     {% csrf_token %}
     <div>
         {{form.as_p}}
@@ -25,17 +26,19 @@
 </form>
 
 {% else %}
-<h3>Для добавления своего комментария, пожалуйста, авторизуйтесь</h3>
+<h3 class="comment">Для добавления своего комментария, пожалуйста, авторизуйтесь</h3>
 {% endif %}
 <br />
-<hr />
 
 {% for comment in comments %}
 <hr />
+<div class="user_comment">
 <h6>{{comment.date}}</h6>
 <h5>{{comment.author}}</h5>
 <p>{{comment.text|linebreaksbr}}</p>
+</div>
 {% endfor %}
 
-<p><a href="{% url 'blog' %}" class="btn btn-danger">Назад</a></p>
+<hr class="separator"/>
+<p><a href="{% url 'blog' %}" class="my-btn">Назад</a></p>
 {% endblock %}
