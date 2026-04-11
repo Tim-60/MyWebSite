@@ -10,6 +10,10 @@
 
 <h2>{{ post_1.title }}</h2>
 
+{% if post_1.image and post_1.image.url != '/media/temp.jpg' %}
+<img src="{{ post_1.image.url}}" alt="Картинка" width="200">
+{% endif %}
+
 <div class="blog-content">
     {{ post_1.content|safe }}
 </div>

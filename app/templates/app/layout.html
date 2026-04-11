@@ -41,7 +41,16 @@
                     <li><a href="{% url 'contact' %}">Контакты</a></li>
                     <li><a href="{% url 'links' %}">Полезные ресурсы</a></li>
                     <li><a href="{% url 'pool' %}">Обратная связь</a></li>
-                    <li><a href="{% url 'blog' %}">Библиотека</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Библиотека <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'blog' %}">Текстовые материалы</a></li>
+                            <li><a href="{% url 'video' %}">Видеоматериалы</a></li>
+                            {% if user.is_superuser %}
+                            <li><a href="{% url 'newpost' %}">Добавить материал</a></li>
+                            {% endif %}
+                        </ul>
+                            </li>
                 </ul>
                 {% include 'app/loginpartial.html' %}
             </div>
