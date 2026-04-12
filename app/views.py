@@ -191,7 +191,7 @@ def video(request):
         request,
         'app/video.html',
         {
-            'title':'Видео',
+            'title':'Видеоматериалы',
             'message':'Сведения о нас',
             'year':datetime.now().year,
         }

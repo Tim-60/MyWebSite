@@ -1,0 +1,87 @@
+body {
+    margin-top: 5%;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #66cc99 0%, #66b8cc 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h3 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-align: center;
+    text-decoration: underline solid 5px;
+    text-underline-offset: 10px;
+}
+
+form p {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+form p label {
+    color: #6633FF; 
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+
+form input[type="text"],
+form input[type="file"],
+form textarea {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 25px; 
+    padding: 15px 25px;
+    font-size: 1em;
+    color: #111111;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px #6633FF;
+}
+
+.save.btn {
+    display: block;
+    background-color: #ffffff;
+    margin: auto;
+    width: 50%;
+    color: #555555; 
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.8rem;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.save.btn:hover {
+    color: #f9f9f9;
+    background-color: #33CC33;
+    transform: scale(1.05);
+}
+
+hr {
+    border: 0;
+    height: 5px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+    margin: 30px 0;
+}

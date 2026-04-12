@@ -1,0 +1,20 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/videopost.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1> {{title}} </h1>
+<hr>
+<div>
+    <h2>Падение на Юпитер(симуляция)</h2>
+    <Video class="video-card" src="/media/Falling Into Jupiter (Simulation).mp4" controls="controls" width="510" height="340" poster="/media/jupiter_0.jpg" preload="auto"></Video>
+</div>
+<hr>
+<div>
+    <h2>5 ИНТЕРЕСНЫХ ОПЫТОВ СО СПИРТОМ</h2>
+    <video class="video-card" src="/media/ПЯТЬ ИНТЕРЕСНЫХ ОПЫТОВ СО СПИРТОМ.mp4" controls="controls" width="400" height="300" poster="/media/Exp.jpg" preload="auto"></video>
+</div>
+{% endblock %}

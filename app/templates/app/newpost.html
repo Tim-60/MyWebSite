@@ -2,12 +2,18 @@
 {% load static %}
 
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/newpost.css' %}">
+{% endblock %}
+
 {% block content %}
 <h3>Добавить статью</h3>
+<hr>
 <form method="POST" enctype="multipart/form-data"> {% csrf_token %} 
     <div>
         {{ blogform.as_p}}
-        <button type="submit" class="save btn btn-default">Сохранить статью</button>
+        <hr>
+        <button type="submit" class="save btn">Сохранить статью</button>
     </div>
 </form>
 

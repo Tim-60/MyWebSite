@@ -5,7 +5,7 @@ body, html {
 }
 
 .page-wrapper {
-    padding: 30px /* Отступы сверху и снизу */
+    padding: 30px 
 }
 
 .posts-grid {
@@ -17,19 +17,17 @@ body, html {
     margin: 0 auto; 
 }
 
-/* 2. Заголовок "Материалы" */
 .page-title {
     margin-bottom: 24px;
     text-align: center;
     color: #fff; 
-    font-size: 5rem; /* Делаем покрупнее, как на скриншоте */
+    font-size: 5rem; 
     font-weight: 700;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* 3. Карточки */
 .post-card {
     background: #ffffff;
     border-radius: 12px;
