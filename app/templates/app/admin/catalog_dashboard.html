@@ -1,0 +1,107 @@
+{% extends 'app/layout.html' %}
+{% load static %}
+
+{% block title %}Админ-панель - Управление каталогом{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h2 class="page-title">Администрирование</h2>
+    <div>
+        <a href="{% url 'admin_add_category' %}" class="btn-small">+ Добавить категорию</a>
+        <a href="{% url 'admin_add_material' %}" class="btn-small">+ Добавить материал</a>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>{{ categories.count }}</h3>
+        <p>Категорий</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ materials.count }}</h3>
+        <p>Материалов</p>
+    </div>
+</div>
+
+<div class="admin-section">
+    <h3 class="section-title">Категории</h3>
+    {% if categories %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Материалов</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td><strong>{{ category.name }}</strong></td>
+                <td>{{ category.description|truncatewords:10 }}</td>
+                <td>{{ category.materials_count }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'category_detail' category.slug %}" class="view">Просмотр</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"></div>
+        <h3>Нет категорий</h3>
+        <p>Создайте первую категорию</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="admin-section">
+    <h3 class="section-title">Материалы</h3>
+    {% if materials %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Изображение</th>
+                <th>Название</th>
+                <th>Категория</th>
+                <th>Тип</th>
+                <th>Цена</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for material in materials %}
+            <tr>
+                <td>
+                    {% if material.image %}
+                    <img src="{{ material.image.url }}" alt="{{ material.title }}">
+                    {% else %}
+                    <span></span>
+                    {% endif %}
+                </td>
+                <td><strong>{{ material.title }}</strong></td>
+                <td>{{ material.category.name|default:"-" }}</td>
+                <td>{{ material.get_material_type_display|default:"-" }}</td>
+                <td>{{ material.price|default:"Бесплатно" }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'material_detail' material.pk %}" class="view">Просмотр</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"></div>
+        <h3>Нет материалов</h3>
+        <p>Добавьте первый материал</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

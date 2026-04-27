@@ -1,9 +1,12 @@
 ﻿{% extends "app/layout.html" %}
 {% load static %}
 
-
+{% block extra_css %}
+    <style>
+        body {margin-top: 5%; min-height: 100vh;}
+    </style>
+    {% endblock %}
 {% block content %}
-
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
 

@@ -4514,7 +4514,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   padding-top: 10px;
 }
 
-.navbar-right > .navbar-nav > li > span {
+.navbar-right > .navbar-nav > li> a.navbar-brand {
   color: #6633FF;
   rotate: 8deg;
   font-weight: 700;
@@ -4552,16 +4552,16 @@ textarea.input-group-sm > .input-group-btn > .btn {
   border-radius: 8px;
 }
 
-
-.navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-nav > li > a:focus,
-.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+.navbar-inverse .navbar-nav > li > a:not(.navbar-brand):not(.navbar-brand-img):hover,
+.navbar-inverse .navbar-nav > li > a:not(.navbar-brand):not(.navbar-brand-img):focus,
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
   color: #6633FF;
   background-color: rgba(102, 51, 255, 0.08);
   transform: translateY(-2px);
 }
 
-.navbar-inverse .navbar-nav > li > a:not(.navbar-brand-img)::before,
+.navbar-inverse .navbar-nav > li > a:not(.navbar-brand):not(.navbar-brand-img)::before,
 .dropdown-menu > li > a::before {
   content: "";
   position: absolute;
@@ -4575,7 +4575,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   transition: transform 0.5s ease;
 }
 
-.navbar-inverse .navbar-nav > li > a:not(.navbar-brand-img):hover::before, 
+.navbar-inverse .navbar-nav > li > a:not(.navbar-brand):not(.navbar-brand-img):hover::before,
 .dropdown-menu > li > a:hover::before {
   transform: scaleX(1);
 }

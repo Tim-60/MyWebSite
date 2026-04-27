@@ -1,0 +1,57 @@
+{% extends 'app/layout.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/material_detail.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="material-detail">
+
+    <div class="material-header">
+        <h2>{{ material.title }} - Просмотр</h2>
+        {% if material.image %}
+        <img src="{{ material.image.url }}" alt="{{ material.title }}" width="500px" height="500px" class="material-image-large">
+        {% endif %}
+        
+        <h1 class="material-title-large">{{ material.content|safe }}</h1>
+        
+        <div class="material-info">
+            <div class="info-badge">
+                <strong>Категория</strong>
+                <span>{{ material.category.name|default:"Не указана" }}</span>
+            </div>
+            <div class="info-badge">
+                <strong>Тип</strong>
+                <span>{{ material.get_material_type_display|default:"Материал" }}</span>
+            </div>
+            <div class="info-badge">
+                <strong>Автор</strong>
+                <span>{{ material.author|default:"Автор" }}</span>
+            </div>
+            <div class="info-badge">
+                <strong>Длительность</strong>
+                <span>{{ material.duration|default:"Длительность" }}</span>
+            </div>
+            
+            {% if material.price %}
+            <div class="info-badge">
+                <strong>Цена</strong>
+                <span>{{ material.price }} ₽</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="material-description-full">
+        <h3>Описание</h3>
+        <p>{{ material.full_description|safe }}</p>
+    </div>
+
+    <div class="material-actions">
+        <a href="{% if material.category %}{% url 'category_detail' material.category.slug %}{% else %}{% url 'catalog' %}{% endif %}" class="back-link">Назад к списку</a>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,3 +1,8 @@
+body {
+    margin-top: 0%; 
+    min-height: 100vh;
+}
+
 .form-card, .data-card {
     width: 100%;
     transition: all 0.3s ease;
@@ -7,6 +12,7 @@
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     border-bottom: 2px solid #fff;
     padding-bottom: 10px;
 }
@@ -16,11 +22,12 @@
     color: #6633FF;
     margin-bottom: 0.5rem;
     font-size: 1.5rem;
+    text-align: center;
 }
 
 .resources input[type="text"],
 .resources select,
-.resources textarea {
+.resources textarea{
     width: 100%;
     padding: 1rem 1.5rem;
     border: 2px solid #eee;
@@ -29,10 +36,15 @@
     transition: all 0.3s ease;
     box-sizing: border-box;
     outline: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .resources .mybutton {
     display: block;
+    margin-left: auto;
+    margin-right: auto;
     width: 100%;
     padding: 1rem;
     background: #fff;
@@ -71,10 +83,12 @@
     border-radius: 20px;
     font-size: 1.8rem;
     color: #333;
-    display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #6633FF;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .resources-list li span {
@@ -85,10 +99,15 @@
 
 .resources h3 {
     font-size: 3rem;
-    margin-top: 80px;
     margin-bottom: 1rem;
     color: #fff;
     text-align: center;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     font-weight: 700;
+}
+
+#id_education {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

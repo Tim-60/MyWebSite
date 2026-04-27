@@ -7,6 +7,7 @@ from django.urls import include, path
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from app import forms, views
+from app import views as app_views
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -39,6 +40,13 @@ urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
     path('newpost/', views.newpost, name = 'newpost'),
     path('video',views.video, name = 'video'),
+    path('catalog/', app_views.catalog_view, name='catalog'),
+    path('catalog/category/<slug:slug>/', app_views.category_detail, name='category_detail'),
+    path('catalog/material/<int:pk>/', app_views.material_detail, name='material_detail'),
+    
+    path('catalog/admin/', app_views.admin_catalog_dashboard, name='admin_catalog_dashboard'),
+    path('catalog/admin/category/add/', app_views.admin_add_category, name='admin_add_category'),
+    path('catalog/admin/material/add/', app_views.admin_add_material, name='admin_add_material'),
 ]
 
 if settings.DEBUG:

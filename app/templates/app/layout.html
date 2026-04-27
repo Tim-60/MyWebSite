@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{% static 'app/content/contacts.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/pool.css' %}">
     <link rel="stylesheet" href="{% static 'app/content/blog.css' %}">
+    <link rel="stylesheet" href="{% static 'app/content/catalog.css' %}">
     {% endblock %}
     <style>
     body {
@@ -46,9 +47,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'blog' %}">Текстовые материалы</a></li>
                             <li><a href="{% url 'video' %}">Видеоматериалы</a></li>
-                            {% if user.is_superuser %}
-                            <li><a href="{% url 'newpost' %}">Добавить материал</a></li>
-                            {% endif %}
+                            <li><a href="{% url 'catalog' %}">Каталог</a></li>
                         </ul>
                             </li>
                 </ul>

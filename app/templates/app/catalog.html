@@ -1,0 +1,33 @@
+{% extends 'app/layout.html' %}
+{% load static %}
+
+{% block content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/catalog.css' %}">
+{% endblock %}
+
+<h1 class="mb-4">Каталог образовательных материалов</h1>
+
+{% if categories %}
+<div class="categories-grid">
+    {% for category in categories %}
+    <a href="{% url 'category_detail' category.slug %}" class="category-card">
+        {% if category.image %}
+    <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
+    {% else %}
+    <div class="category-icon">{{ category.icon|default:"-" }}</div>
+    {% endif %}
+        <h2 class="category-title">{{ category.name }}</h2>
+        <p class="category-description">{{ category.description|truncatewords:20 }}</p>
+        <span class="category-count">{{ category.materials_count }} материалов</span>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-categories">
+    <div class="no-categories-icon"></div>
+    <p>Категории пока отсутствуют</p>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,228 @@
+body {
+    margin-top: 5%;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #66cc99 0%, #66b8cc 100%);
+}
+
+a.back-link{
+    display: block;
+    margin: auto;
+    text-align: center;
+    padding: 1rem;
+    background: #fff;
+    width: 25%;
+    color: #333;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+}
+
+a.back-link:hover {
+    text-decoration: none;
+    background-color: #6633FF;
+    color: #f9f9f9;
+    transform: scale(1.05);
+
+}
+
+
+.material-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.material-header {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 2px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.material-image-large {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    margin: 0 auto 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 2.2em;
+    color: #333;
+    margin-bottom: 25px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+}
+
+
+.material-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 2px solid #f1f3f5;
+}
+
+.info-badge {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 12px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-width: 140px;
+    border: 1px solid #dee2e6;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.info-badge strong {
+    font-size: 0.85em;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.info-badge span {
+    font-size: 1.1em;
+    color: #333;
+    font-weight: 600;
+}
+
+.material-description-full {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 2px solid #e9ecef;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.material-description-full h3 {
+    font-size: 1.6em;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #6633FF;
+    display: inline-block;
+    font-weight: 700;
+}
+
+.material-description-full p {
+    color: #495057;
+    line-height: 1.8;
+    font-size: 1.05em;
+    margin: 0;
+}
+
+
+.material-description-full h1,
+.material-description-full h2,
+.material-description-full h3,
+.material-description-full h4 {
+    color: #333;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.material-description-full h1:first-child,
+.material-description-full h2:first-child,
+.material-description-full h3:first-child {
+    margin-top: 0;
+}
+
+.material-description-full p {
+    margin-bottom: 15px;
+}
+
+.material-description-full ul,
+.material-description-full ol {
+    margin-bottom: 15px;
+    padding-left: 30px;
+}
+
+.material-description-full li {
+    margin-bottom: 8px;
+    line-height: 1.7;
+}
+
+.material-description-full strong,
+.material-description-full b {
+    color: #333;
+    font-weight: 600;
+}
+
+.material-description-full em,
+.material-description-full i {
+    color: #495057;
+}
+
+.material-description-full a {
+    color: #667eea;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.material-description-full a:hover {
+    color: #764ba2;
+}
+
+.material-description-full blockquote {
+    border-left: 4px solid #667eea;
+    padding-left: 20px;
+    margin: 20px 0;
+    color: #6c757d;
+    font-style: italic;
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 0 8px 8px 0;
+}
+
+.material-description-full code {
+    background: #f1f3f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e83e8c;
+}
+
+.material-description-full pre {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+.material-description-full pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}

@@ -3,12 +3,16 @@ Definition of views.
 """
 
 from datetime import datetime
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpRequest
-from .forms import MainForm, CommentForm, BlogForm
+from .forms import MainForm, CommentForm, BlogForm, CategoryForm, EducationalMaterialForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import models
-from .models import Blog, Comment
+from .models import Blog, Comment, Category, EducationalMaterial
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
+from django.db.models import Count
+
 
 def home(request):
     """Renders the home page."""
@@ -194,5 +198,113 @@ def video(request):
             'title':'Видеоматериалы',
             'message':'Сведения о нас',
             'year':datetime.now().year,
+        }
+    )
+
+def catalog_view(request):
+    
+    categories = Category.objects.annotate(
+        materials_count=Count('materials')).filter(materials_count__gt=0)
+    
+    return render(
+        request, 
+        'app/catalog.html',
+        {
+            'categories': categories
+        }
+        
+    )
+
+def category_detail(request, slug):
+    
+    category = get_object_or_404(Category, slug=slug)
+    materials = EducationalMaterial.objects.filter(category=category)
+    if request.GET.get('type'):
+        materials = materials.filter(material_type=request.GET['type'])
+
+    is_free_filter = request.GET.get('is_free') == 'true'
+    if is_free_filter:
+        materials = materials.filter(is_free=True)
+
+    return render(
+        request, 
+        'app/category_detail.html', 
+        {
+            'category': category,
+            'materials': materials
+        }
+    )
+
+def material_detail(request, pk):
+    
+    material = get_object_or_404(EducationalMaterial, pk=pk)
+
+    return render(
+        request, 
+        'app/material_detail.html', 
+        {
+            'material': material
+        }
+    )
+
+
+def is_staff(user):
+    return user.is_staff
+
+@login_required
+@user_passes_test(is_staff)
+def admin_catalog_dashboard(request):
+   
+    categories = Category.objects.annotate(materials_count=Count('materials'))
+    materials = EducationalMaterial.objects.select_related('category').all()
+
+    return render(
+        request, 
+        'app/admin/catalog_dashboard.html', 
+        {
+            'categories': categories,
+            'materials': materials
+        }
+    )
+
+@login_required
+@user_passes_test(is_staff)
+def admin_add_category(request):
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Категория создана!')
+            return redirect('admin_catalog_dashboard')
+    else:
+        form = CategoryForm()
+    return render(
+        request, 
+        'app/admin/form.html', 
+        {
+            'form': form, 
+            'title': 'Добавить категорию'
+        }
+    )
+
+@login_required
+@user_passes_test(is_staff)
+def admin_add_material(request):
+    
+    if request.method == 'POST':
+        form = EducationalMaterialForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Материал создан!')
+            return redirect('admin_catalog_dashboard')
+    else:
+        form = EducationalMaterialForm()
+    return render(
+        request, 
+        'app/admin/form.html', 
+        {
+            'form': form, 
+            'title': 'Добавить материал'
         }
     )

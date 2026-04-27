@@ -6,7 +6,8 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 from django.db import models
-from .models import Comment
+from django_summernote.admin import SummernoteModelAdmin
+from .models import Comment, EducationalMaterial, Category
 from .models import Blog
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -49,3 +50,40 @@ class BlogForm(forms.ModelForm):
         fields = ('title', 'description', 'content', 'image', )
         labels = {'title': "Заголовок", 'description': "Краткое содержание", 
                   'content': "Полное содержание", 'image': "Картинка"}
+        
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'description', 'slug', 'image']
+        error_messages = {
+            'name': {
+                'unique': "Категория с таким названием уже существует."
+            }
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'slug': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+class EducationalMaterialForm(forms.ModelForm):
+    class Meta:
+        model = EducationalMaterial
+        fields = [
+            'title', 'short_description', 'full_description', 'material_type',
+            'category', 'author', 'price', 'is_free', 'image',
+            'duration'
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'short_description': forms.TextInput(attrs={'class': 'form-control'}),
+            'full_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'material_type': forms.Select(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'author': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'is_free': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'duration': forms.TextInput(attrs={'class': 'form-control'}),
+        }

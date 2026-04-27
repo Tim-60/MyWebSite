@@ -2,7 +2,15 @@
 <form id="logoutForm" action="/logout/" method="post" class="navbar-right">
     {% csrf_token %}
     <ul class="nav navbar-nav navbar-right">
-        <li><span class="navbar-brand">Привет, {{ user.username }}!</span></li>
+        <li class="dropdown">
+            <a class="navbar-brand"><span>Привет, {{ user.username }}!</span></a>
+            {% if user.is_superuser %}
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'newpost' %}">Добавить материал</a></li>
+                <li><a href="{% url 'admin_catalog_dashboard' %}">Администрирование</a></li>
+            </ul>
+            {% endif %}
+        </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
     </ul>
 </form>
