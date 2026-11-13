@@ -8,10 +8,10 @@ from django.http import HttpRequest
 from .forms import MainForm, CommentForm, BlogForm, CategoryForm, EducationalMaterialForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import models
-from .models import Blog, Comment, Category, EducationalMaterial
+from .models import Blog, Comment, Category, EducationalMaterial, Order
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Sum
 
 
 def home(request):
@@ -306,5 +306,35 @@ def admin_add_material(request):
         {
             'form': form, 
             'title': 'Добавить материал'
+        }
+    )
+
+def is_manager(user):
+    return user.is_authenticated and any(g.name.lower() == 'менеджер' for g in user.groups.all())
+
+@login_required
+@user_passes_test(is_manager)
+def manager_orders(request):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, pk=request.POST.get('order_id'))
+        new_status = request.POST.get('status')
+        if new_status in dict(Order.STATUS_CHOICES):
+            order.status = new_status
+            order.save(update_fields=['status'])
+            messages.success(request, 'Статус заказа №%d изменён.' % order.id)
+        return redirect('manager_orders')
+
+    orders = (Order.objects
+              .select_related('customer')
+              .prefetch_related('items')
+              .annotate(total_price=Sum('items__price')))
+
+    return render(
+        request,
+        'app/manager/orders.html',
+        {
+            'title': 'Заказы',
+            'orders': orders,
+            'statuses': Order.STATUS_CHOICES,
         }
     )

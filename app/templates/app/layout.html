@@ -37,20 +37,37 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'home' %}" class="navbar-brand-img"><img src="{% static 'app/content/logo.png' %}" alt="logo" width="45" height="30" /></a></li>
-                    <li><a href="{% url 'about' %}">О нас</a></li>
-                    <li><a href="{% url 'contact' %}">Контакты</a></li>
-                    <li><a href="{% url 'links' %}">Полезные ресурсы</a></li>
-                    <li><a href="{% url 'pool' %}">Обратная связь</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle">Библиотека <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'blog' %}">Текстовые материалы</a></li>
-                            <li><a href="{% url 'video' %}">Видеоматериалы</a></li>
-                            <li><a href="{% url 'catalog' %}">Каталог</a></li>
-                        </ul>
-                            </li>
-                </ul>
+    <li><a href="{% url 'home' %}" class="navbar-brand-img"><img src="{% static 'app/content/logo.png' %}" alt="logo" width="45" height="30" /></a></li>
+    <li><a href="{% url 'about' %}">О нас</a></li>
+    <li><a href="{% url 'blog' %}">Новости</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle">Библиотека <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{% url 'blog' %}">Текстовые материалы</a></li>
+            <li><a href="{% url 'video' %}">Видеоматериалы</a></li>
+            <li><a href="{% url 'catalog' %}">Каталог</a></li>
+        </ul>
+    </li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle">Дополнительно <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="{% url 'contact' %}">Контакты</a></li>
+            <li><a href="{% url 'links' %}">Полезные ресурсы</a></li>
+            <li><a href="{% url 'pool' %}">Обратная связь</a></li>
+        </ul>
+    </li>
+
+    {% if user.is_authenticated and not user.is_superuser %}
+        {% if user.groups.exists %}
+            {# Менеджер #}
+            <li><a href="{% url 'manager_orders' %}">Заказы</a></li>
+        {% else %}
+            {# Клиент #}
+            <li><a href="#">Корзина</a></li> {# TODO: заменить на {% url 'cart' %} #}
+            <li><a href="#">Мои покупки</a></li> {# TODO: заменить на {% url 'my_orders' %} #}
+        {% endif %}
+    {% endif %}
+</ul>
                 {% include 'app/loginpartial.html' %}
             </div>
         </div>

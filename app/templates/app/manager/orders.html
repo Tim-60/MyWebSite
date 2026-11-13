@@ -1,0 +1,67 @@
+{% extends 'app/layout.html' %}
+{% load static %}
+
+{% block title %}Заказы{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/admin.css' %}">
+<link rel="stylesheet" href="{% static 'app/content/orders.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h2 class="page-title">Заказы клиентов</h2>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="order-message">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if orders %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Клиент</th>
+            <th>Дата</th>
+            <th>Состав</th>
+            <th>Сумма</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td><strong>{{ order.customer.username }}</strong></td>
+            <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+            <td>
+                {% for item in order.items.all %}{{ item.title }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </td>
+            <td>{{ order.total_price|default:0 }} ₽</td>
+            <td>
+                <form method="post" class="status-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                    <select name="status">
+                        {% for value, label in statuses %}
+                        <option value="{{ value }}" {% if value == order.status %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn-status">Изменить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+    <h3>Заказов пока нет</h3>
+    <p>Как только клиенты оформят заказы, они появятся здесь</p>
+</div>
+{% endif %}
+{% endblock %}

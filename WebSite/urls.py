@@ -47,6 +47,7 @@ urlpatterns = [
     path('catalog/admin/', app_views.admin_catalog_dashboard, name='admin_catalog_dashboard'),
     path('catalog/admin/category/add/', app_views.admin_add_category, name='admin_add_category'),
     path('catalog/admin/material/add/', app_views.admin_add_material, name='admin_add_material'),
+    path('orders/', app_views.manager_orders, name='manager_orders'),
 ]
 
 if settings.DEBUG:

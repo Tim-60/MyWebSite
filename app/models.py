@@ -109,5 +109,34 @@ class EducationalMaterial(models.Model):
             self.is_free = True
         super().save(*args, **kwargs)
 
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('processing', 'В обработке'),
+        ('confirmed', 'Подтверждён'),
+        ('completed', 'Выполнен'),
+        ('cancelled', 'Отменён'),
+    ]
 
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', verbose_name="Клиент")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата заказа")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='processing', verbose_name="Статус")
+
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return 'Заказ №%d (%s)' % (self.id, self.customer)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name="Заказ")
+    material = models.ForeignKey(EducationalMaterial, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Материал")
+    title = models.CharField(max_length=100, verbose_name="Название на момент заказа")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена на момент заказа")
+
+    def __str__(self):
+        return self.title
+    
 admin.site.register(Comment)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django_summernote.admin import SummernoteModelAdmin
-from .models import Blog, Category, EducationalMaterial
+from .models import Blog, Category, EducationalMaterial, Order, OrderItem
 
 @admin.register(Blog)
 class BlogAdmin(SummernoteModelAdmin):
@@ -35,3 +35,13 @@ class EducationalMaterialAdmin(SummernoteModelAdmin):
             return format_html('<span style="color:green">Бесплатно</span>')
         return f'{obj.price} ₽'
     price_display.short_description = 'Цена'
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 1
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'customer', 'created_at', 'status')
+    list_filter = ('status',)
+    inlines = [OrderItemInline]
