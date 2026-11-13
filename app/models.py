@@ -103,6 +103,10 @@ class EducationalMaterial(models.Model):
     
     def get_absolute_url(self):
         return reverse('material_detail', kwargs={'pk': self.pk})
+
+    @property
+    def is_paid(self):
+        return not self.is_free and self.price > 0
     
     def save(self, *args, **kwargs):
         if self.price == 0:
@@ -116,7 +120,7 @@ class Order(models.Model):
         ('completed', 'Выполнен'),
         ('cancelled', 'Отменён'),
     ]
-
+    ACCESS_STATUSES = ('confirmed', 'completed')
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', verbose_name="Клиент")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата заказа")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='processing', verbose_name="Статус")

@@ -3,14 +3,19 @@
     {% csrf_token %}
     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-            <a class="navbar-brand"><span>Привет, {{ user.username }}!</span></a>
-            {% if user.is_superuser %}
-            <ul class="dropdown-menu">
-                <li><a href="{% url 'newpost' %}">Добавить материал</a></li>
-                <li><a href="{% url 'admin_catalog_dashboard' %}">Администрирование</a></li>
-            </ul>
-            {% endif %}
-        </li>
+    <a class="navbar-brand"><span>Привет, {{ user.username }}!</span></a>
+    {% if user.is_superuser %}
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'newpost' %}">Добавить материал</a></li>
+        <li><a href="{% url 'admin_catalog_dashboard' %}">Администрирование</a></li>
+    </ul>
+    {% elif not user.groups.exists %}
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'cart' %}">Корзина</a></li>
+        <li><a href="{% url 'my_orders' %}">Мои покупки</a></li>
+    </ul>
+    {% endif %}
+</li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
     </ul>
 </form>

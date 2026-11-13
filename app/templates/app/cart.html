@@ -1,0 +1,63 @@
+{% extends 'app/layout.html' %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/admin.css' %}">
+<link rel="stylesheet" href="{% static 'app/content/orders.css' %}">
+<link rel="stylesheet" href="{% static 'app/content/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h2 class="page-title">Корзина</h2>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="order-message">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if materials %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Материал</th>
+            <th>Тип</th>
+            <th>Стоимость</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for material in materials %}
+        <tr>
+            <td><a href="{% url 'material_detail' material.pk %}"><strong>{{ material.title }}</strong></a></td>
+            <td>{{ material.get_material_type_display }}</td>
+            <td>{% if material.price %}{{ material.price }} ₽{% else %}Бесплатно{% endif %}</td>
+            <td>
+                <form method="post" action="{% url 'remove_from_cart' material.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-remove">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="cart-summary">
+    <div class="cart-total">Итого: <strong>{{ total }} ₽</strong></div>
+    <form method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-checkout">Оформить заказ</button>
+    </form>
+</div>
+{% else %}
+<div class="empty-state">
+    <h3>Корзина пуста</h3>
+    <p>Выберите материалы в <a href="{% url 'catalog' %}">каталоге</a></p>
+</div>
+{% endif %}
+{% endblock %}

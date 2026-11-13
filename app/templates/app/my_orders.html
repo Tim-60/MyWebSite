@@ -1,0 +1,53 @@
+{% extends 'app/layout.html' %}
+{% load static %}
+
+{% block title %}Мои покупки{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/admin.css' %}">
+<link rel="stylesheet" href="{% static 'app/content/orders.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h2 class="page-title">Мои покупки</h2>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="order-message">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if orders %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Дата</th>
+            <th>Состав</th>
+            <th>Итого</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+            <td>
+                {% for item in order.items.all %}{{ item.title }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </td>
+            <td>{{ order.total_price|default:0 }} ₽</td>
+            <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+    <h3>Покупок пока нет</h3>
+    <p>Загляните в <a href="{% url 'catalog' %}">каталог</a> и выберите что-нибудь интересное</p>
+</div>
+{% endif %}
+{% endblock %}

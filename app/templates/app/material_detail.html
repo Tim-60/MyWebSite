@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'app/content/material_detail.css' %}">
+<link rel="stylesheet" href="{% static 'app/content/cart.css' %}">
 {% endblock %}
 
 
@@ -44,13 +45,36 @@
         </div>
     </div>
 
+    {% if has_access %}
     <div class="material-description-full">
         <h3>Описание</h3>
         <p>{{ material.full_description|safe }}</p>
     </div>
+    {% else %}
+    <div class="material-locked">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3>Этот материал платный</h3>
+        <p class="lock-short">{{ material.short_description }}</p>
+        <p class="lock-price">Стоимость: <strong>{{ material.price }} ₽</strong></p>
+
+        {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}" class="buy-btn">Войти, чтобы купить</a>
+        {% elif pending %}
+            <p class="lock-note">Заказ оформлен и ожидает подтверждения менеджером.</p>
+            <a href="{% url 'my_orders' %}" class="buy-btn">Мои покупки</a>
+        {% elif in_cart %}
+            <a href="{% url 'cart' %}" class="buy-btn">Уже в корзине</a>
+        {% else %}
+            <form method="post" action="{% url 'add_to_cart' material.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="buy-btn">В корзину</button>
+            </form>
+        {% endif %}
+    </div>
+    {% endif %}
 
     <div class="material-actions">
-        <a href="{% if material.category %}{% url 'category_detail' material.category.slug %}{% else %}{% url 'catalog' %}{% endif %}" class="back-link">Назад к списку</a>
+    <a href="{% if material.category %}{% url 'category_detail' material.category.slug %}{% else %}{% url 'catalog' %}{% endif %}" class="back-link">Назад к списку</a>
     </div>
 
 </div>

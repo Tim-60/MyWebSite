@@ -48,6 +48,11 @@ urlpatterns = [
     path('catalog/admin/category/add/', app_views.admin_add_category, name='admin_add_category'),
     path('catalog/admin/material/add/', app_views.admin_add_material, name='admin_add_material'),
     path('orders/', app_views.manager_orders, name='manager_orders'),
+    path('cart/', app_views.cart_view, name='cart'),
+    path('cart/add/<int:pk>/', app_views.add_to_cart, name='add_to_cart'),
+    path('cart/remove/<int:pk>/', app_views.remove_from_cart, name='remove_from_cart'),
+    path('cart/checkout/', app_views.checkout, name='checkout'),
+    path('purchases/', app_views.my_orders, name='my_orders'),
 ]
 
 if settings.DEBUG:

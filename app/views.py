@@ -7,11 +7,12 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpRequest
 from .forms import MainForm, CommentForm, BlogForm, CategoryForm, EducationalMaterialForm
 from django.contrib.auth.forms import UserCreationForm
-from django.db import models
-from .models import Blog, Comment, Category, EducationalMaterial, Order
+from django.db import models, transaction
+from .models import Blog, Comment, Category, EducationalMaterial, Order, OrderItem
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Count, Sum
+from django.views.decorators.http import require_POST
 
 
 def home(request):
@@ -236,17 +237,22 @@ def category_detail(request, slug):
     )
 
 def material_detail(request, pk):
-    
+
     material = get_object_or_404(EducationalMaterial, pk=pk)
+    has_access, pending = material_access(request.user, material)
+    in_cart = material.pk in request.session.get('cart', [])
 
     return render(
-        request, 
-        'app/material_detail.html', 
+        request,
+        'app/material_detail.html',
         {
-            'material': material
+            'material': material,
+            'has_access': has_access,
+            'pending': pending,
+            'in_cart': in_cart,
         }
     )
-
+    
 
 def is_staff(user):
     return user.is_staff
@@ -309,6 +315,20 @@ def admin_add_material(request):
         }
     )
 
+def material_access(user, material):
+    if not material.is_paid:
+        return True, False
+    if not user.is_authenticated:
+        return False, False
+    if user.is_superuser or is_manager(user):
+        return True, False
+    statuses = set(
+        OrderItem.objects
+        .filter(order__customer=user, material=material)
+        .values_list('order__status', flat=True)
+    )
+    return bool(statuses & set(Order.ACCESS_STATUSES)), 'processing' in statuses
+
 def is_manager(user):
     return user.is_authenticated and any(g.name.lower() == 'менеджер' for g in user.groups.all())
 
@@ -336,5 +356,109 @@ def manager_orders(request):
             'title': 'Заказы',
             'orders': orders,
             'statuses': Order.STATUS_CHOICES,
+        }
+    )
+
+def is_client(user):
+    return user.is_authenticated and not user.is_superuser and not is_manager(user)
+
+
+@login_required
+@user_passes_test(is_client)
+@require_POST
+def add_to_cart(request, pk):
+    material = get_object_or_404(EducationalMaterial, pk=pk)
+    if not material.is_paid:
+        messages.info(request, 'Этот материал бесплатный, покупка не нужна.')
+        return redirect('cart')
+
+    has_access, pending = material_access(request.user, material)
+    if has_access or pending:
+        messages.info(request, 'Вы уже приобрели этот материал, либо заказ ожидает подтверждения.')
+        return redirect('cart')
+    
+    cart = request.session.get('cart', [])
+    if material.pk in cart:
+        messages.info(request, 'Этот материал уже в корзине.')
+    else:
+        cart.append(material.pk)
+        request.session['cart'] = cart
+        messages.success(request, 'Материал «%s» добавлен в корзину.' % material.title)
+    return redirect('cart')
+
+
+@login_required
+@user_passes_test(is_client)
+@require_POST
+def remove_from_cart(request, pk):
+    cart = request.session.get('cart', [])
+    if pk in cart:
+        cart.remove(pk)
+        request.session['cart'] = cart
+        messages.success(request, 'Материал удалён из корзины.')
+    return redirect('cart')
+
+
+@login_required
+@user_passes_test(is_client)
+def cart_view(request):
+    ids = request.session.get('cart', [])
+    materials = list(EducationalMaterial.objects.filter(pk__in=ids).select_related('category'))
+
+    # если материал удалили из каталога, он выпадает и из корзины
+    found = {m.pk for m in materials}
+    clean = [i for i in ids if i in found]
+    if clean != ids:
+        request.session['cart'] = clean
+
+    total = sum(m.price for m in materials)
+
+    return render(
+        request,
+        'app/cart.html',
+        {
+            'title': 'Корзина',
+            'materials': materials,
+            'total': total,
+        }
+    )
+
+
+@login_required
+@user_passes_test(is_client)
+@require_POST
+def checkout(request):
+    ids = request.session.get('cart', [])
+    materials = list(EducationalMaterial.objects.filter(pk__in=ids))
+    if not materials:
+        messages.warning(request, 'Корзина пуста.')
+        return redirect('cart')
+
+    with transaction.atomic():
+        order = Order.objects.create(customer=request.user)
+        OrderItem.objects.bulk_create([
+            OrderItem(order=order, material=m, title=m.title, price=m.price)
+            for m in materials
+        ])
+
+    request.session['cart'] = []
+    messages.success(request, 'Заказ №%d оформлен.' % order.id)
+    return redirect('my_orders')
+
+
+@login_required
+@user_passes_test(is_client)
+def my_orders(request):
+    orders = (Order.objects
+              .filter(customer=request.user)
+              .prefetch_related('items')
+              .annotate(total_price=Sum('items__price')))
+
+    return render(
+        request,
+        'app/my_orders.html',
+        {
+            'title': 'Мои покупки',
+            'orders': orders,
         }
     )
