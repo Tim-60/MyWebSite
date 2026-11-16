@@ -13,7 +13,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Count, Sum
 from django.views.decorators.http import require_POST
+from django.contrib.auth.views import redirect_to_login
 
+def is_admin(user):
+    return user.is_superuser
 
 def home(request):
     """Renders the home page."""
@@ -22,8 +25,9 @@ def home(request):
         request,
         'app/index.html',
         {
-            'title':'Главная',
-            'year':datetime.now().year,
+            'title': 'Главная',
+            'latest_news': Blog.objects.all()[:3],
+            'year': datetime.now().year,
         }
     )
 
@@ -99,12 +103,6 @@ def registration(request):
     if request.method == "POST":
         regform = UserCreationForm(request.POST)
         if regform.is_valid():
-            reg_f = regform.save(commit=False)
-            reg_f.is_staff = False
-            reg_f.is_active = True
-            reg_f.is_superuser = False
-            reg_f.date_joined = datetime.now()
-            reg_f.last_login = datetime.now()
             regform.save()
             return redirect('home')
     else:
@@ -133,25 +131,23 @@ def blog(request):
     }
     )
 
-def blogpost (request, parametr):
-
+def blogpost(request, parametr):
     assert isinstance(request, HttpRequest)
-    post_1 = Blog.objects.get(id=parametr)
-    comments = Comment.objects.filter(post=parametr)
-    form = CommentForm(request.POST)
-    
+    post_1 = get_object_or_404(Blog, id=parametr)
+    comments = Comment.objects.filter(post=post_1)
+
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
+        form = CommentForm(request.POST)
         if form.is_valid():
             comment_f = form.save(commit=False)
             comment_f.author = request.user
-            comment_f.date = datetime.now()
-            comment_f.post = Blog.objects.get(id=parametr)
+            comment_f.post = post_1
             comment_f.save()
-
             return redirect('blogpost', parametr=post_1.id)
-        
-        else:
-            form = CommentForm()
+    else:
+        form = CommentForm()
 
     return render(
         request,
@@ -164,6 +160,8 @@ def blogpost (request, parametr):
         }
     )
 
+@login_required
+@user_passes_test(is_admin)
 def newpost(request):
     assert isinstance(request, HttpRequest)
 
@@ -171,10 +169,8 @@ def newpost(request):
         blogform = BlogForm(request.POST, request.FILES)
         if blogform.is_valid():
             blog_f = blogform.save(commit=False)
-            blog_f.posted = datetime.now()
             blog_f.author = request.user
             blog_f.save()
-
             return redirect('blog')
     else:
         blogform = BlogForm()
@@ -184,7 +180,7 @@ def newpost(request):
         'app/newpost.html',
         {
             'blogform': blogform,
-            'title': 'Добавить материал',
+            'title': 'Добавить новость',
             'year': datetime.now().year,
         }
     )
@@ -217,22 +213,28 @@ def catalog_view(request):
     )
 
 def category_detail(request, slug):
-    
     category = get_object_or_404(Category, slug=slug)
     materials = EducationalMaterial.objects.filter(category=category)
-    if request.GET.get('type'):
-        materials = materials.filter(material_type=request.GET['type'])
+
+    selected_type = request.GET.get('type', '')
+    if selected_type in dict(EducationalMaterial.MATERIAL_TYPES):
+        materials = materials.filter(material_type=selected_type)
+    else:
+        selected_type = ''
 
     is_free_filter = request.GET.get('is_free') == 'true'
     if is_free_filter:
         materials = materials.filter(is_free=True)
 
     return render(
-        request, 
-        'app/category_detail.html', 
+        request,
+        'app/category_detail.html',
         {
             'category': category,
-            'materials': materials
+            'materials': materials,
+            'material_types': EducationalMaterial.MATERIAL_TYPES,
+            'selected_type': selected_type,
+            'is_free_filter': is_free_filter,
         }
     )
 
@@ -254,11 +256,10 @@ def material_detail(request, pk):
     )
     
 
-def is_staff(user):
-    return user.is_staff
+
 
 @login_required
-@user_passes_test(is_staff)
+@user_passes_test(is_admin)
 def admin_catalog_dashboard(request):
    
     categories = Category.objects.annotate(materials_count=Count('materials'))
@@ -274,11 +275,11 @@ def admin_catalog_dashboard(request):
     )
 
 @login_required
-@user_passes_test(is_staff)
+@user_passes_test(is_admin)
 def admin_add_category(request):
     
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = CategoryForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Категория создана!')
@@ -295,7 +296,7 @@ def admin_add_category(request):
     )
 
 @login_required
-@user_passes_test(is_staff)
+@user_passes_test(is_admin)
 def admin_add_material(request):
     
     if request.method == 'POST':

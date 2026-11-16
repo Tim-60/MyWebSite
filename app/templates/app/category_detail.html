@@ -20,9 +20,9 @@
             <label for="type">Тип материала:</label>
             <select name="type" id="type">
                 <option value="">Все типы</option>
-                <option value="article" {% if request.GET.type == 'article' %}selected{% endif %}>Статья</option>
-                <option value="test" {% if request.GET.type == 'test' %}selected{% endif %}>Тест</option>
-                <option value="other" {% if request.GET.type == 'other' %}selected{% endif %}>Другое</option>
+                {% for value, label in material_types %}
+                <option value="{{ value }}" {% if value == selected_type %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="filter-group">
@@ -52,10 +52,12 @@
             </h3>
             <p class="material-description">{{ material.short_description|truncatewords:20 }}</p>
             <div class="material-meta">
-                <span class="material-tag">{{ material.get_material_type_display|default:"Материал" }}</span>
-                <span class="material-tag">{{ material.duration|default:"Длительность" }}</span>
-                {% if material.price %}
-                <span class="material-price">{{ material.price }} ₽</span>
+                <span class="material-tag">{{ material.get_material_type_display }}</span>
+                {% if material.duration %}<span class="material-tag">{{ material.duration }}</span>{% endif %}
+                {% if material.is_free %}
+                    <span class="material-price">Бесплатно</span>
+                {% else %}
+                    <span class="material-price">{{ material.price }} ₽</span>
                 {% endif %}
             </div>
         </div>

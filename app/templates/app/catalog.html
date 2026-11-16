@@ -1,11 +1,11 @@
 {% extends 'app/layout.html' %}
 {% load static %}
 
-{% block content %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'app/content/catalog.css' %}">
 {% endblock %}
 
+{% block content %}
 <h1 class="mb-4">Каталог образовательных материалов</h1>
 
 {% if categories %}

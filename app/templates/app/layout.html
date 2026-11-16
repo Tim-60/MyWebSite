@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>{% block title %}{{ title }}{% endblock %} — EduFlow</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
@@ -43,7 +43,6 @@
     <li class="dropdown">
         <a href="#" class="dropdown-toggle">Библиотека <span class="caret"></span></a>
         <ul class="dropdown-menu">
-            <li><a href="{% url 'blog' %}">Текстовые материалы</a></li>
             <li><a href="{% url 'video' %}">Видеоматериалы</a></li>
             <li><a href="{% url 'catalog' %}">Каталог</a></li>
         </ul>

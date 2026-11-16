@@ -11,12 +11,12 @@
 <div class="material-detail">
 
     <div class="material-header">
-        <h2>{{ material.title }} - Просмотр</h2>
+        <h2>Просмотр материала</h2>
         {% if material.image %}
         <img src="{{ material.image.url }}" alt="{{ material.title }}" width="500px" height="500px" class="material-image-large">
         {% endif %}
         
-        <h1 class="material-title-large">{{ material.content|safe }}</h1>
+        <h1 class="material-title-large">{{ material.title }}</h1>
         
         <div class="material-info">
             <div class="info-badge">
@@ -39,7 +39,7 @@
             {% if material.price %}
             <div class="info-badge">
                 <strong>Цена</strong>
-                <span>{{ material.price }} ₽</span>
+                <span>{% if material.is_free %}Бесплатно{% else %}{{ material.price }} ₽{% endif %}</span>
             </div>
             {% endif %}
         </div>
@@ -48,7 +48,7 @@
     {% if has_access %}
     <div class="material-description-full">
         <h3>Описание</h3>
-        <p>{{ material.full_description|safe }}</p>
+        <div>{{ material.full_description|safe }}</div>
     </div>
     {% else %}
     <div class="material-locked">

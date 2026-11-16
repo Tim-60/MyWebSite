@@ -6,7 +6,7 @@
     <a class="navbar-brand"><span>Привет, {{ user.username }}!</span></a>
     {% if user.is_superuser %}
     <ul class="dropdown-menu">
-        <li><a href="{% url 'newpost' %}">Добавить материал</a></li>
+        <li><a href="{% url 'newpost' %}">Добавить новость</a></li>
         <li><a href="{% url 'admin_catalog_dashboard' %}">Администрирование</a></li>
     </ul>
     {% elif not user.groups.exists %}

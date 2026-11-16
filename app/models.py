@@ -5,6 +5,7 @@ Definition of models.
 from django.db import models
 from django.contrib import admin
 from datetime import datetime
+from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
@@ -13,7 +14,7 @@ class Blog(models.Model):
     title = models.CharField(max_length = 100, unique_for_date = "posted", verbose_name = "Заголовок")
     description = models.TextField(verbose_name= "Краткое содержание" )
     content = models.TextField(verbose_name= "Полное содержание")
-    posted = models.DateTimeField(default=datetime.now(), db_index= True, verbose_name = "Опубликована")
+    posted = models.DateTimeField(default=timezone.now, db_index=True, verbose_name="Опубликована")
     author = models.ForeignKey(User, null=True, blank=True, on_delete = models.SET_NULL, verbose_name = "Автор")
     image = models.FileField(default='temp.jpg', verbose_name= "Путь к картинке")
     
@@ -30,18 +31,18 @@ class Blog(models.Model):
 
 class Comment(models.Model):
     text = models.TextField(verbose_name="Текст комментария")
-    date = models.DateTimeField(default=datetime.now(), db_index= True, verbose_name = "Дата комментария")
+    date = models.DateTimeField(default=timezone.now, db_index=True, verbose_name="Дата комментария")
     author = models.ForeignKey(User, on_delete = models.CASCADE, verbose_name= "Автор комментария")
     post = models.ForeignKey(Blog, on_delete = models.CASCADE, verbose_name = "Статья комментария")
 
+    class Meta:
+        db_table = "Comment"
+        ordering = ["-date"]
+        verbose_name = "Комментарии к статье блога"
+        verbose_name_plural = "Комментарии к статьям блога"
+
     def __str__(self):
         return 'Комментарий %d %s к %s' % (self.id, self.author, self.post)
-
-class Meta:
-    db_table = "Comment"
-    ordering = ["-date"]
-    verbose_name = "Комментарии к статье блога"
-    verbose_name_plural = "Комментарии к статьям блога"
 
 
 class Category(models.Model):
@@ -90,8 +91,7 @@ class EducationalMaterial(models.Model):
     author = models.CharField(max_length=200, blank=True, verbose_name="Автор")
     duration = models.CharField(max_length=50, blank=True, verbose_name="Продолжительность")
 
-
-    posted_at = models.DateTimeField(default=datetime.now(), verbose_name="Опубликовано")
+    posted_at = models.DateTimeField(default=timezone.now, verbose_name="Опубликовано")
     
     class Meta:
         verbose_name = "Образовательный материал"
@@ -109,7 +109,9 @@ class EducationalMaterial(models.Model):
         return not self.is_free and self.price > 0
     
     def save(self, *args, **kwargs):
-        if self.price == 0:
+        if self.is_free:
+            self.price = 0
+        elif self.price == 0:
             self.is_free = True
         super().save(*args, **kwargs)
 
