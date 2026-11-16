@@ -9,14 +9,13 @@ from .forms import MainForm, CommentForm, BlogForm, CategoryForm, EducationalMat
 from django.contrib.auth.forms import UserCreationForm
 from django.db import models, transaction
 from .models import Blog, Comment, Category, EducationalMaterial, Order, OrderItem
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Count, Sum
 from django.views.decorators.http import require_POST
 from django.contrib.auth.views import redirect_to_login
+from django.contrib.auth.models import Group
+from .roles import (CLIENT_GROUP, is_admin, is_manager, is_client, role_required)
 
-def is_admin(user):
-    return user.is_superuser
 
 def home(request):
     """Renders the home page."""
@@ -99,17 +98,18 @@ def pool(request):
     )
 
 def registration(request):
-
     if request.method == "POST":
         regform = UserCreationForm(request.POST)
         if regform.is_valid():
-            regform.save()
+            user = regform.save()
+            client_group, _ = Group.objects.get_or_create(name=CLIENT_GROUP)
+            user.groups.add(client_group)
             return redirect('home')
     else:
         regform = UserCreationForm()
     assert isinstance(request, HttpRequest)
     return render(
-        request, 
+        request,
         'app/registration.html',
         {
             'regform': regform,
@@ -160,8 +160,7 @@ def blogpost(request, parametr):
         }
     )
 
-@login_required
-@user_passes_test(is_admin)
+@role_required(is_admin)  
 def newpost(request):
     assert isinstance(request, HttpRequest)
 
@@ -256,10 +255,7 @@ def material_detail(request, pk):
     )
     
 
-
-
-@login_required
-@user_passes_test(is_admin)
+@role_required(is_admin)  
 def admin_catalog_dashboard(request):
    
     categories = Category.objects.annotate(materials_count=Count('materials'))
@@ -274,8 +270,7 @@ def admin_catalog_dashboard(request):
         }
     )
 
-@login_required
-@user_passes_test(is_admin)
+@role_required(is_admin)  
 def admin_add_category(request):
     
     if request.method == 'POST':
@@ -295,8 +290,7 @@ def admin_add_category(request):
         }
     )
 
-@login_required
-@user_passes_test(is_admin)
+@role_required(is_admin)  
 def admin_add_material(request):
     
     if request.method == 'POST':
@@ -330,11 +324,8 @@ def material_access(user, material):
     )
     return bool(statuses & set(Order.ACCESS_STATUSES)), 'processing' in statuses
 
-def is_manager(user):
-    return user.is_authenticated and any(g.name.lower() == 'менеджер' for g in user.groups.all())
 
-@login_required
-@user_passes_test(is_manager)
+@role_required(is_manager)
 def manager_orders(request):
     if request.method == 'POST':
         order = get_object_or_404(Order, pk=request.POST.get('order_id'))
@@ -360,12 +351,8 @@ def manager_orders(request):
         }
     )
 
-def is_client(user):
-    return user.is_authenticated and not user.is_superuser and not is_manager(user)
 
-
-@login_required
-@user_passes_test(is_client)
+@role_required(is_client)
 @require_POST
 def add_to_cart(request, pk):
     material = get_object_or_404(EducationalMaterial, pk=pk)
@@ -388,8 +375,7 @@ def add_to_cart(request, pk):
     return redirect('cart')
 
 
-@login_required
-@user_passes_test(is_client)
+@role_required(is_client)
 @require_POST
 def remove_from_cart(request, pk):
     cart = request.session.get('cart', [])
@@ -400,13 +386,11 @@ def remove_from_cart(request, pk):
     return redirect('cart')
 
 
-@login_required
-@user_passes_test(is_client)
+@role_required(is_client)
 def cart_view(request):
     ids = request.session.get('cart', [])
     materials = list(EducationalMaterial.objects.filter(pk__in=ids).select_related('category'))
 
-    # если материал удалили из каталога, он выпадает и из корзины
     found = {m.pk for m in materials}
     clean = [i for i in ids if i in found]
     if clean != ids:
@@ -425,8 +409,7 @@ def cart_view(request):
     )
 
 
-@login_required
-@user_passes_test(is_client)
+@role_required(is_client)
 @require_POST
 def checkout(request):
     ids = request.session.get('cart', [])
@@ -447,8 +430,7 @@ def checkout(request):
     return redirect('my_orders')
 
 
-@login_required
-@user_passes_test(is_client)
+@role_required(is_client)
 def my_orders(request):
     orders = (Order.objects
               .filter(customer=request.user)

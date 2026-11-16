@@ -4,12 +4,12 @@
     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
     <a class="navbar-brand"><span>Привет, {{ user.username }}!</span></a>
-    {% if user.is_superuser %}
+    {% if is_admin %}
     <ul class="dropdown-menu">
         <li><a href="{% url 'newpost' %}">Добавить новость</a></li>
         <li><a href="{% url 'admin_catalog_dashboard' %}">Администрирование</a></li>
     </ul>
-    {% elif not user.groups.exists %}
+    {% elif is_client %}
     <ul class="dropdown-menu">
         <li><a href="{% url 'cart' %}">Корзина</a></li>
         <li><a href="{% url 'my_orders' %}">Мои покупки</a></li>

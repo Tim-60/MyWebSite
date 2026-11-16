@@ -1,0 +1,11 @@
+{% extends 'app/layout.html' %}
+
+{% block title %}Доступ запрещён{% endblock %}
+
+{% block content %}
+<div style="text-align: center; color: #fff; margin-top: 10%;">
+    <h1 style="font-size: 5rem;">403</h1>
+    <h2>У вашей роли нет доступа к этой странице</h2>
+    <p><a href="{% url 'home' %}" style="color: #fff; text-decoration: underline;">На главную</a></p>
+</div>
+{% endblock %}

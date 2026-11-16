@@ -56,9 +56,10 @@
         </ul>
     </li>
 
-    {% if user.is_authenticated and not user.is_superuser and user.groups.exists %}
-    <li><a href="{% url 'manager_orders' %}">Заказы</a></li>
+    {% if is_manager %}
+        <li><a href="{% url 'manager_orders' %}">Заказы</a></li>
     {% endif %}
+
 </ul>
                 {% include 'app/loginpartial.html' %}
             </div>

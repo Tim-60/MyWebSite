@@ -50,6 +50,7 @@
         <h3>Описание</h3>
         <div>{{ material.full_description|safe }}</div>
     </div>
+
     {% else %}
     <div class="material-locked">
         <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
@@ -64,6 +65,8 @@
             <a href="{% url 'my_orders' %}" class="buy-btn">Мои покупки</a>
         {% elif in_cart %}
             <a href="{% url 'cart' %}" class="buy-btn">Уже в корзине</a>
+        {% elif not is_client %}
+            <p class="lock-note">Покупка доступна только клиентам.</p>
         {% else %}
             <form method="post" action="{% url 'add_to_cart' material.pk %}">
                 {% csrf_token %}
