@@ -1,0 +1,21 @@
+{% extends 'app/layout.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/content/confirm_delete.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="confirm-box">
+    <h2>{{ title }}</h2>
+    <p class="confirm-object">«{{ object }}»</p>
+    <p class="confirm-text">{{ text }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-confirm">Да, удалить</button>
+        <a href="{{ back_url }}" class="btn-cancel">Отмена</a>
+    </form>
+</div>
+{% endblock %}

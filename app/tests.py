@@ -10,6 +10,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .roles import is_client, is_manager
+from .models import Blog, Category, EducationalMaterial, MaterialComment
 
 # TODO: Configure your database in settings.py and sync before running tests.
 
@@ -91,3 +92,66 @@ class RolesTest(TestCase):
         both.groups.add(*Group.objects.filter(name__in=['Клиент', 'Менеджер']))
         self.assertTrue(is_manager(both))
         self.assertFalse(is_client(both))
+
+    def test_material_comments_by_role(self):
+        category = Category.objects.create(name='Тест', slug='test')
+        material = EducationalMaterial.objects.create(
+            title='Материал', short_description='кратко', full_description='полно',
+            category=category, is_free=True)
+        url = reverse('material_detail', args=[material.pk])
+
+        self.client.logout()
+        self.assertEqual(self.client.post(url, {'text': 'привет'}).status_code, 302)
+
+        self.client.force_login(self.manager_user)
+        self.assertEqual(self.client.post(url, {'text': 'привет'}).status_code, 403)
+        self.assertEqual(MaterialComment.objects.count(), 0)
+
+        self.client.force_login(self.client_user)
+        self.assertEqual(self.client.post(url, {'text': 'Отлично!'}).status_code, 302)
+        self.assertEqual(MaterialComment.objects.get().author, self.client_user)
+        self.assertContains(self.client.get(url), 'Отлично!')
+
+
+    def test_admin_edit_and_delete(self):
+        category = Category.objects.create(name='К1', slug='k1')
+        material = EducationalMaterial.objects.create(
+            title='М1', short_description='к', full_description='п',
+            category=category, is_free=True)
+        post = Blog.objects.create(title='Н1', description='d', content='c')
+
+        urls = [
+            reverse('admin_edit_category', args=[category.pk]),
+            reverse('admin_delete_category', args=[category.pk]),
+            reverse('admin_edit_material', args=[material.pk]),
+            reverse('admin_delete_material', args=[material.pk]),
+            reverse('edit_post', args=[post.pk]),
+            reverse('delete_post', args=[post.pk]),
+        ]
+
+        # клиент и менеджер: 403, ничего не удалено
+        for user in (self.client_user, self.manager_user):
+            self.client.force_login(user)
+            for url in urls:
+                with self.subTest(user=user.username, url=url):
+                    self.assertEqual(self.client.post(url).status_code, 403)
+        self.assertTrue(Category.objects.exists())
+        self.assertTrue(Blog.objects.exists())
+
+        # администратор: изменение
+        self.client.force_login(self.admin_user)
+        self.client.post(reverse('admin_edit_category', args=[category.pk]),
+                        {'name': 'К1 новое', 'slug': 'k1', 'description': ''})
+        category.refresh_from_db()
+        self.assertEqual(category.name, 'К1 новое')
+
+        # GET на удаление только показывает подтверждение
+        self.assertEqual(self.client.get(urls[5]).status_code, 200)
+        self.assertTrue(Blog.objects.filter(pk=post.pk).exists())
+
+        # POST удаляет; удаление категории каскадно удаляет материалы
+        self.client.post(urls[5])
+        self.assertFalse(Blog.objects.filter(pk=post.pk).exists())
+        self.client.post(urls[1])
+        self.assertFalse(Category.objects.exists())
+        self.assertFalse(EducationalMaterial.objects.exists())

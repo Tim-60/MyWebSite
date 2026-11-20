@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django_summernote.admin import SummernoteModelAdmin
-from .models import Blog, Category, EducationalMaterial, Order, OrderItem
+from .models import Blog, Category, EducationalMaterial, Order, OrderItem, MaterialComment
 
 @admin.register(Blog)
 class BlogAdmin(SummernoteModelAdmin):
@@ -45,3 +45,9 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'customer', 'created_at', 'status')
     list_filter = ('status',)
     inlines = [OrderItemInline]
+
+@admin.register(MaterialComment)
+class MaterialCommentAdmin(admin.ModelAdmin):
+    list_display = ('material', 'author', 'date')
+    list_filter = ('material',)
+    search_fields = ('text', 'author__username')

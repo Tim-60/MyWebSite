@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<h3>Добавить статью</h3>
+<h3>{{ heading|default:"Добавить статью" }}</h3>
 <hr>
 <form method="POST" enctype="multipart/form-data"> {% csrf_token %} 
     <div>

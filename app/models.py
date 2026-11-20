@@ -144,5 +144,20 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+class MaterialComment(models.Model):
+    text = models.TextField(verbose_name="Текст комментария")
+    date = models.DateTimeField(default=timezone.now, db_index=True, verbose_name="Дата комментария")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор комментария")
+    material = models.ForeignKey(EducationalMaterial, on_delete=models.CASCADE,
+                                 related_name='comments', verbose_name="Материал")
+
+    class Meta:
+        ordering = ["-date"]
+        verbose_name = "Комментарий к материалу"
+        verbose_name_plural = "Комментарии к материалам"
+
+    def __str__(self):
+        return 'Комментарий %d %s к %s' % (self.id, self.author, self.material) 
+
 admin.site.register(Comment)

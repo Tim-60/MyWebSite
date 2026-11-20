@@ -5,7 +5,7 @@ Definition of views.
 from datetime import datetime
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpRequest
-from .forms import MainForm, CommentForm, BlogForm, CategoryForm, EducationalMaterialForm
+from .forms import MainForm, CommentForm, BlogForm, CategoryForm, EducationalMaterialForm, MaterialCommentForm
 from django.contrib.auth.forms import UserCreationForm
 from django.db import models, transaction
 from .models import Blog, Comment, Category, EducationalMaterial, Order, OrderItem
@@ -15,6 +15,9 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.models import Group
 from .roles import (CLIENT_GROUP, is_admin, is_manager, is_client, role_required)
+from django.core.exceptions import PermissionDenied
+from django.urls import reverse
+
 
 
 def home(request):
@@ -238,10 +241,26 @@ def category_detail(request, slug):
     )
 
 def material_detail(request, pk):
-
     material = get_object_or_404(EducationalMaterial, pk=pk)
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
+        if not is_client(request.user):
+            raise PermissionDenied
+        form = MaterialCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.material = material
+            comment.save()
+            return redirect(material.get_absolute_url() + '#comments')
+    else:
+        form = MaterialCommentForm()
+
     has_access, pending = material_access(request.user, material)
     in_cart = material.pk in request.session.get('cart', [])
+    comments = material.comments.select_related('author')
 
     return render(
         request,
@@ -251,22 +270,25 @@ def material_detail(request, pk):
             'has_access': has_access,
             'pending': pending,
             'in_cart': in_cart,
+            'form': form,
+            'comments': comments,
         }
     )
-    
-
-@role_required(is_admin)  
-def admin_catalog_dashboard(request):
    
+@role_required(is_admin)
+def admin_catalog_dashboard(request):
+
     categories = Category.objects.annotate(materials_count=Count('materials'))
     materials = EducationalMaterial.objects.select_related('category').all()
+    posts = Blog.objects.select_related('author').all()
 
     return render(
-        request, 
-        'app/admin/catalog_dashboard.html', 
+        request,
+        'app/admin/catalog_dashboard.html',
         {
             'categories': categories,
-            'materials': materials
+            'materials': materials,
+            'posts': posts,
         }
     )
 
@@ -309,6 +331,112 @@ def admin_add_material(request):
             'title': 'Добавить материал'
         }
     )
+
+# ---------- Изменение ----------
+
+@role_required(is_admin)
+def admin_edit_category(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, request.FILES, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Категория «%s» сохранена.' % category.name)
+            return redirect('admin_catalog_dashboard')
+    else:
+        form = CategoryForm(instance=category)
+    return render(request, 'app/admin/form.html',
+                  {'form': form, 'title': 'Изменить категорию'})
+
+
+@role_required(is_admin)
+def admin_edit_material(request, pk):
+    material = get_object_or_404(EducationalMaterial, pk=pk)
+    if request.method == 'POST':
+        form = EducationalMaterialForm(request.POST, request.FILES, instance=material)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Материал «%s» сохранён.' % material.title)
+            return redirect('admin_catalog_dashboard')
+    else:
+        form = EducationalMaterialForm(instance=material)
+    return render(request, 'app/admin/form.html',
+                  {'form': form, 'title': 'Изменить материал'})
+
+
+@role_required(is_admin)
+def edit_post(request, pk):
+    post = get_object_or_404(Blog, pk=pk)
+    if request.method == 'POST':
+        blogform = BlogForm(request.POST, request.FILES, instance=post)
+        if blogform.is_valid():
+            blogform.save()
+            messages.success(request, 'Новость «%s» сохранена.' % post.title)
+            return redirect('admin_catalog_dashboard')
+    else:
+        blogform = BlogForm(instance=post)
+    return render(
+        request,
+        'app/newpost.html',
+        {
+            'blogform': blogform,
+            'heading': 'Изменить новость',
+            'title': 'Изменить новость',
+            'year': datetime.now().year,
+        }
+    )
+
+
+# ---------- Удаление ----------
+
+def _confirm_delete(request, obj, title, text, done_message):
+    """Показывает страницу подтверждения, а удаляет только по POST."""
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, done_message)
+        return redirect('admin_catalog_dashboard')
+    return render(
+        request,
+        'app/admin/confirm_delete.html',
+        {
+            'title': title,
+            'object': obj,
+            'text': text,
+            'back_url': reverse('admin_catalog_dashboard'),
+        }
+    )
+
+
+@role_required(is_admin)
+def admin_delete_category(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    count = category.materials.count()
+    text = 'Категория будет удалена безвозвратно.'
+    if count:
+        text = ('Категория будет удалена вместе со всеми материалами в ней (%d шт.) '
+                'и комментариями к ним. Это действие нельзя отменить.' % count)
+    return _confirm_delete(request, category, 'Удалить категорию', text,
+                           'Категория «%s» удалена.' % category.name)
+
+
+@role_required(is_admin)
+def admin_delete_material(request, pk):
+    material = get_object_or_404(EducationalMaterial, pk=pk)
+    text = ('Материал и комментарии к нему будут удалены. '
+            'В истории заказов название и цена сохранятся.')
+    return _confirm_delete(request, material, 'Удалить материал', text,
+                           'Материал «%s» удалён.' % material.title)
+
+
+@role_required(is_admin)
+def delete_post(request, pk):
+    post = get_object_or_404(Blog, pk=pk)
+    count = post.comment_set.count()
+    text = 'Новость будет удалена безвозвратно.'
+    if count:
+        text = 'Новость будет удалена вместе с комментариями (%d шт.).' % count
+    return _confirm_delete(request, post, 'Удалить новость', text,
+                           'Новость «%s» удалена.' % post.title)
 
 def material_access(user, material):
     if not material.is_paid:

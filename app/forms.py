@@ -7,8 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django_summernote.admin import SummernoteModelAdmin
-from .models import Comment, EducationalMaterial, Category
-from .models import Blog
+from .models import Comment, EducationalMaterial, Category, Blog, MaterialComment
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -43,6 +42,14 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('text',)
         labels = {'text':"Комментарий"}
+
+class MaterialCommentForm(forms.ModelForm):
+    class Meta:
+        model = MaterialComment
+        fields = ('text',)
+        labels = {'text': "Комментарий"}
+        widgets = {'text': forms.Textarea(attrs={'rows': 4})}
+
 
 class BlogForm(forms.ModelForm):
     class Meta: 
